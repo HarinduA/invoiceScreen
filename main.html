@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Add Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+</head>
+<body>
+    <!-- Your HTML content here -->
+    <div class="receipt-container">
+        <div class="receipt-header">
+            <h1>Keells - Eldeniya</h1>
+        </div>
+        <div class="receipt-info-container">
+            <div class="receipt-info">
+                <p>
+                    Bill Date: 18-May-2024<br>
+                    Billed Time: 19:22:28
+                </p>
+                <p>
+                    Bill No: 3028960<br>
+                    Cashier ID: 1121050000268791
+                </p>
+            </div>
+        </div>
+        <div class="receipt-table-container">
+            <table class="receipt-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Description</th>
+                        <th>Qty</th>
+                        <th>Price (LKR)</th>
+                        <th>Amount (LKR)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>951015</td>
+                        <td>TOP CRUST BREAD 450G</td>
+                        <td>1.0</td>
+                        <td>149.00</td>
+                        <td>149.00</td>
+                    </tr>
+                    <tr>
+                        <td>951009</td>
+                        <td>KEELLS SANDWICH BREAD 450G</td>
+                        <td>1.0</td>
+                        <td>280.00</td>
+                        <td>280.00</td>
+                    </tr>
+                    <tr>
+                        <td>111451</td>
+                        <td>SAMS CHICKEN SAUSAGE 200G</td>
+                        <td>1.0</td>
+                        <td>590.00</td>
+                        <td>590.00</td>
+                    </tr>
+                    <tr>
+                        <td>118833</td>
+                        <td>KEELLS ONION SNACKS 50G</td>
+                        <td>1.0</td>
+                        <td>179.00</td>
+                        <td>179.00</td>
+                    </tr>
+                    <tr>
+                        <td>122081</td>
+                        <td>AYUSH ANTI CAVITY TOOTHPASTE 110G</td>
+                        <td>2.0</td>
+                        <td>285.00</td>
+                        <td>570.00</td>
+                    </tr>
+                    <tr>
+                        <td>6255</td>
+                        <td>NESTOMALT ACTIGEN PKT 175G</td>
+                        <td>1.0</td>
+                        <td>390.00</td>
+                        <td>390.00</td>
+                    </tr>
+                    <tr>
+                        <td>115575</td>
+                        <td>AMBEWELA CHEESE SPREAD 100G</td>
+                        <td>1.0</td>
+                        <td>370.00</td>
+                        <td>370.00</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="4">Subtotal</th>
+                        <td id="subtotal">2537.00</td>
+                    </tr>
+                    <tr>
+                        <th colspan="4">VAT (15%)</th>
+                        <td id="vat">380.55</td>
+                    </tr>
+                    <tr>
+                        <th colspan="4">Total</th>
+                        <td id="total">2917.55</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Your Firebase configuration object
+        var firebaseConfig = {
+            apiKey: "your-api-key",
+            authDomain: "receiptdata-8fdd0.firebaseapp.com",
+            projectId: "receiptdata-8fdd0",
+            storageBucket: "your-project-id.appspot.com",
+            messagingSenderId: "470666115907",
+            appId: "1:470666115907:web:feea7f70035c9890108df6",
+            measurementId: "your-measurement-id"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.firestore();
+
+        // Add receipt data to Firestore
+        function addReceipt() {
+            var receiptData = {
+                store: "Keells - Eldeniya",
+                billDate: "18-May-2024",
+                billedTime: "19:22:28",
+                billNo: "3028960",
+                cashierId: "1121050000268791",
+                items: [
+                    { itemCode: "951015", description: "TOP CRUST BREAD 450G", qty: 1, price: 149.00, amount: 149.00 },
+                    { itemCode: "951009", description: "KEELLS SANDWICH BREAD 450G", qty: 1, price: 280.00, amount: 280.00 },
+                    { itemCode: "111451", description: "SAMS CHICKEN SAUSAGE 200G", qty: 1, price: 590.00, amount: 590.00 },
+                    { itemCode: "118833", description: "KEELLS ONION SNACKS 50G", qty: 1, price: 179.00, amount: 179.00 },
+                    { itemCode: "122081", description: "AYUSH ANTI CAVITY TOOTHPASTE 110G", qty: 2, price: 285.00, amount: 570.00 },
+                    { itemCode: "6255", description: "NESTOMALT ACTIGEN PKT 175G", qty: 1, price: 390.00, amount: 390.00 },
+                    { itemCode: "115575", description: "AMBEWELA CHEESE SPREAD 100G", qty: 1, price: 370.00, amount: 370.00 }
+                ],
+                subtotal: 2537.00,
+                vat: 380.55,
+                total: 2917.55
+            };
+
+            db.collection("receipts").add(receiptData)
+                .then((docRef) => {
+                    console.log("Document written with ID: ", docRef.id);
+                })
+                .catch((error) => {
+                    console.error("Error adding document: ", error);
+                });
+        }
+
+        // Call the function to add receipt data
+        addReceipt();
+    </script>
+</body>
+</html>
